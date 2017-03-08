@@ -95,7 +95,7 @@ class Draw {
         }
 
         const shapeMerged = Object.assign(_shape, shape);
-        console.log(shapeMerged);
+        // console.log(shapeMerged);
 
         Object.assign(sprite, shapeMerged);
 

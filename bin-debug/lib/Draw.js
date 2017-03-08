@@ -52,7 +52,7 @@ var Draw = (function () {
             sprite.cacheAsBitmap = true;
         }
         var shapeMerged = Object.assign(_shape, shape);
-        console.log(shapeMerged);
+        // console.log(shapeMerged);
         Object.assign(sprite, shapeMerged);
         return new Brush(sprite, 'rect');
     };
