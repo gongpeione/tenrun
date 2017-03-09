@@ -33,6 +33,10 @@
 		{
 			"name": "particle",
 			"path": "../libs/egret-game-library/particle/libsrc"
-		}
+		},
+    {
+      "name": "physics",
+      "path": "/Users/geeku/Projects/EgretProjects/libs/egret-game-library/physics/libsrc"
+    }
   ]
 }

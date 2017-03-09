@@ -27,12 +27,12 @@ var GameView = (function (_super) {
         _this.isFalling = false;
         _this.jumpCounter = -22;
         _this.fallCounter = 0;
+        _this.speed = 0;
         _this.global = context;
         _this.init();
         return _this;
     }
     GameView.prototype.init = function () {
-        var _this = this;
         this.createLand();
         this.addChild(this.land);
         this.createSand();
@@ -57,21 +57,76 @@ var GameView = (function (_super) {
         var fallTimer;
         var isFalling = false;
         var isHit = false;
-        var hit = setInterval(function () {
-            isHit = _this.hitTest(_this.figureRect, _this.obstacle);
+        var self = this;
+        function hit() {
+            isHit = this.hitTest(this.figureRect, this.obstacle);
             // console.log(isHit);
             if (isHit) {
-                egret.Tween.removeAllTweens();
-                clearInterval(hit);
-                clearInterval(_this.jumpTimer);
-                clearInterval(_this.fallTimer);
+                egret.stopTick(hit, this);
+                this.gameover();
             }
-        }, 50);
+            return false;
+        }
+        egret.startTick(hit, this);
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this);
         this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this);
         this.touchEnabled = true;
         this.createObstacle();
         this.addChild(this.obstacle);
+        // Create a physics world, where bodies and constraints live
+        // Init p2.js
+        // const world = new p2.World();
+        // // Add a box
+        // const boxShape = new p2.Box({ width: 2, height: 1 });
+        // const boxBody = new p2.Body({ mass:1, position:[0,3],angularVelocity:1 });
+        // boxBody.addShape(boxShape);
+        // world.addBody(boxBody);
+        // // Add a plane
+        // const planeShape = new p2.Plane();
+        // const planeBody = new p2.Body();
+        // planeBody.addShape(planeShape);
+        // world.addBody(planeBody);
+        // const box = Draw.rect(null, {
+        //     x: boxBody.position[0],
+        //     y: boxBody.position[1],
+        //     width: 200,
+        //     height: 100,
+        //     rotation: boxBody.angle
+        // }).brush({
+        //     width: 200,
+        //     height: 100,
+        //     background: 0xff000000
+        // });
+        // this.addChild(box);
+        // const plane = Draw.rect(null, {
+        //     x: 0,
+        //     y: planeBody.position[1] + 300,
+        //     width: 2000,
+        //     height: 10,
+        //     rotation: boxBody.angle
+        // }).brush({
+        //     width: 2000,
+        //     height: 10,
+        //     background: 0x00ff00
+        // });
+        // this.addChild(plane);
+        // function animate(){
+        //     requestAnimationFrame(animate);
+        //     // Move physics bodies forward in time
+        //     world.step(1/60);
+        //     // Render scene
+        //     console.log(boxBody.position[0], boxBody.position[1])
+        //     box.x = boxBody.position[0];
+        //     box.y = boxBody.position[1] + 100;
+        // }
+        // animate();
+    };
+    GameView.prototype.createBitmapByName = function (name) {
+        var result = new egret.Bitmap();
+        var texture = RES.getRes(name);
+        result.texture = texture;
+        console.log(texture);
+        return result;
     };
     GameView.prototype.createSand = function () {
         var sandTexture = RES.getRes("sand_png");
@@ -178,27 +233,39 @@ var GameView = (function (_super) {
     };
     GameView.prototype.createObstacle = function () {
         var _this = this;
+        // const maxHeight = 180;
+        var randomHeight = this.randomHeight(100, 195);
         if (!this.obstacle) {
             this.obstacle = Draw.rect(null, {
                 width: 60,
-                height: 100,
+                height: randomHeight,
                 x: this.width,
-                y: this.height - this.horizontalLine - 80
+                y: this.height - this.horizontalLine - randomHeight + 20
             }).brush({
-                width: 60,
-                height: 100,
                 background: Const.mainColor,
             });
         }
         else {
-            this.obstacle.x = this.width;
+            Draw.rect(this.obstacle, {
+                width: 60,
+                height: randomHeight,
+                x: this.width,
+                y: this.height - this.horizontalLine - randomHeight + 20
+            }).brush({
+                background: Const.mainColor,
+            });
         }
+        // this.addChild(world);
         var tw = egret.Tween.get(this.obstacle);
-        tw.to({ x: -100 }, 2000).call(function () {
+        tw.to({ x: -100 }, 2000 - this.speed).call(function () {
             _this.score += 100;
             _this.scoreText.text = _this.score + '';
             _this.createObstacle();
         });
+        this.speed <= 1000 && (this.speed += 10);
+    };
+    GameView.prototype.randomHeight = function (min, max) {
+        return Math.random() * (max - min) + min;
     };
     GameView.prototype.hitTest = function (obj1, obj2) {
         var rect1 = obj1.getBounds();
@@ -209,6 +276,58 @@ var GameView = (function (_super) {
         rect2.x = obj2.x;
         rect2.y = obj2.y;
         return rect1.intersects(rect2);
+    };
+    GameView.prototype.gameover = function () {
+        var _this = this;
+        egret.Tween.removeAllTweens();
+        clearInterval(this.jumpTimer);
+        clearInterval(this.fallTimer);
+        this.touchEnabled = false;
+        this.addChild(Draw.rect(null, {
+            width: this.width,
+            height: this.height,
+            alpha: .8
+        }).brush({
+            background: 0xff000000
+        }));
+        var retry = new Button({
+            width: 200,
+            height: 100,
+            background: Const.btnColor,
+            text: {
+                text: 'Retry',
+                style: {
+                    size: 50
+                }
+            }
+        })
+            .on(egret.TouchEvent.TOUCH_END, function (e) {
+            _this.global.game();
+        }, this)
+            .center(true, true, this, {
+            x: -100,
+            y: 0
+        });
+        this.addChild(retry);
+        var home = new Button({
+            width: 200,
+            height: 100,
+            background: Const.btnColor,
+            text: {
+                text: 'Home',
+                style: {
+                    size: 50
+                }
+            }
+        })
+            .on(egret.TouchEvent.TOUCH_END, function (e) {
+            _this.global.main();
+        }, this)
+            .center(true, true, this, {
+            x: 100,
+            y: 0
+        });
+        this.addChild(home);
     };
     return GameView;
 }(View));

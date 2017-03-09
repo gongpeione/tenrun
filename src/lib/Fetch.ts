@@ -55,7 +55,7 @@ function fetch (url: string, parame: requestParame = {}) {
             const response = e.currentTarget;
             const responseText = response.response;
 
-            console.log(e.currentTarget);
+            // console.log(e.currentTarget);
 
             const retResponse: responseObject = {
                 response: responseText,

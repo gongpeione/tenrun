@@ -11,6 +11,7 @@ var game_file_list = [
 	"libs/modules/dragonBones/dragonBones.js",
 	"libs/modules/eui/eui.js",
 	"libs/modules/particle/particle.js",
+	"libs/modules/physics/physics.js",
 	"polyfill/promise.js",
 	"bin-debug/Components/Component.js",
 	"bin-debug/Game/View.js",

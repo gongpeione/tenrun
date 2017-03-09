@@ -22,7 +22,9 @@ var Brush = (function () {
         if (style.lineWidth && style.lineColor) {
             this.sprite.graphics.lineStyle(style.lineWidth, style.lineColor);
         }
-        this.sprite.graphics.drawRect(style.x || 0, style.y || 0, style.width || 0, style.height || 0);
+        var height = this.sprite.height || style.height || 0;
+        var width = this.sprite.width || style.width || 0;
+        this.sprite.graphics.drawRect(style.x || 0, style.y || 0, width, height);
         this.sprite.graphics.endFill();
     };
     return Brush;

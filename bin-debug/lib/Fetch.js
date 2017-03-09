@@ -32,7 +32,7 @@ function fetch(url, parame) {
         r.addEventListener(egret.Event.COMPLETE, function (e) {
             var response = e.currentTarget;
             var responseText = response.response;
-            console.log(e.currentTarget);
+            // console.log(e.currentTarget);
             var retResponse = {
                 response: responseText,
                 status: response._xhr.status,
