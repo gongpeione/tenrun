@@ -68,7 +68,6 @@ class StartView extends View {
 
         this.addChild(startGame);
 
-
         const rank = new Button({
             width: 100,
             height: 100,
@@ -87,6 +86,29 @@ class StartView extends View {
         .disable();
 
         this.addChild(rank);
+
+        const mask = new Mask(startGame, this, {
+            alpha: .8
+        });
+        this.addChildAt(mask, 9999);
+
+        this.addChild(
+            (
+                new Button(
+                    {
+                        width: 200,
+                        x: this.width - 250,
+                        text: {
+                            text: 'Close', 
+                            style: { size: 40 } 
+                        }
+                })
+            )
+            .on(egret.TouchEvent.TOUCH_END, () => {
+                this.removeChild(mask);
+            }, this)
+        );
+
 
         return [startGame, rank];
     }

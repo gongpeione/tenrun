@@ -27,6 +27,7 @@ function fetch(url, parame) {
                 }
                 bodyLink += key + "=" + bodyParsed + "&";
             }
+            r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
         r.send(bodyLink);
         r.addEventListener(egret.Event.COMPLETE, function (e) {

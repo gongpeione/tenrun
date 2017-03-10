@@ -1,3 +1,6 @@
+/// <reference path="../../lib/Fetch.ts" />
+
+
 class GameView extends View {
 
     private horizontalLine = 200;
@@ -92,20 +95,45 @@ class GameView extends View {
 
         // Create a physics world, where bodies and constraints live
         // Init p2.js
-        // const world = new p2.World();
+        const world = new p2.World();
+        world.sleepMode = p2.World.BODY_SLEEPING;
+        world.gravity = [ 0, 100 ];
 
-        // // Add a box
-        // const boxShape = new p2.Box({ width: 2, height: 1 });
-        // const boxBody = new p2.Body({ mass:1, position:[0,3],angularVelocity:1 });
-        // boxBody.addShape(boxShape);
-        // world.addBody(boxBody);
-
-        // // Add a plane
+        // Add a plane
         // const planeShape = new p2.Plane();
         // const planeBody = new p2.Body();
+        // planeBody.position[1] =  500;
+        // planeBody.angle = 180;
         // planeBody.addShape(planeShape);
         // world.addBody(planeBody);
 
+        // Add a box
+        const boxShape = new p2.Box({ width: 200, height: 100 });
+        const boxBody = new p2.Body({ mass: 10, position:[200, 3], angle: 45 });
+        boxBody.addShape(boxShape);
+        world.addBody(boxBody);
+
+        const debugDraw = new p2DebugDraw(world);
+ 
+        var sprite: egret.Sprite = new egret.Sprite();
+        this.addChild(sprite);
+        debugDraw.setSprite(sprite);
+
+        const startSign = new Button({
+            x: boxBody.position[0],
+            y: boxBody.position[1],
+            // rotation: boxBody.angle,
+            width: 300,
+            height: 80,
+            background: Const.btnColor,
+            text: {
+                text: 'Game start',
+                style: {
+                    textColor: 0xffffff,
+                    size: 50
+                }
+            }
+        });
         // const box = Draw.rect(null, {
         //     x: boxBody.position[0],
         //     y: boxBody.position[1],
@@ -113,37 +141,34 @@ class GameView extends View {
         //     height: 100,
         //     rotation: boxBody.angle
         // }).brush({
-        //     width: 200,
-        //     height: 100,
-        //     background: 0xff000000
+        //     background: 0xff0000
         // });
-        // this.addChild(box);
+        this.addChild(startSign);
 
         // const plane = Draw.rect(null, {
         //     x: 0,
-        //     y: planeBody.position[1] + 300,
+        //     y: planeBody.position[1],
         //     width: 2000,
-        //     height: 10,
-        //     rotation: boxBody.angle
+        //     height: 10
         // }).brush({
-        //     width: 2000,
-        //     height: 10,
         //     background: 0x00ff00
         // });
         // this.addChild(plane);
 
-        // function animate(){
-        //     requestAnimationFrame(animate);
+        function animate(){
+            requestAnimationFrame(animate);
 
-        //     // Move physics bodies forward in time
-        //     world.step(1/60);
+            // Move physics bodies forward in time
+            world.step(60 / 1000);
 
-        //     // Render scene
-        //     console.log(boxBody.position[0], boxBody.position[1])
-        //     box.x = boxBody.position[0];
-        //     box.y = boxBody.position[1] + 100;
-        // }
-        // animate();
+            // Render scene
+            // console.log(boxBody.position[0], boxBody.position[1])
+            startSign.x = boxBody.position[0];
+            startSign.y = boxBody.position[1];
+            // startSign.rotation = boxBody.angle;
+        }
+        // this.addEventListener(egret.Event.ENTER_FRAME, animate, this);
+        animate();
         
     }
 
@@ -251,7 +276,7 @@ class GameView extends View {
 
         clearInterval(this.jumpTimer);
 
-        this.fallCounter = -this.jumpCounter;
+        // this.fallCounter = -this.jumpCounter;
         this.jumpCounter = -22;
         this.isFalling = true;
 
@@ -397,5 +422,18 @@ class GameView extends View {
         });
         
         this.addChild(home);
+
+        const localStorage = egret.localStorage;
+        const username = localStorage.getItem('username');
+        
+        fetch('https://node.geeku.net/tenrun/score', {
+            method: egret.HttpMethod.POST,
+            body: {
+                name: username,
+                score: this.score
+            }
+        }).then(res => {
+            console.log(res);
+        })
     }
 }

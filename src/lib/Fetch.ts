@@ -46,7 +46,7 @@ function fetch (url: string, parame: requestParame = {}) {
                 bodyLink += `${key}=${bodyParsed}&`;
             }
 
-            // r.setRequestHeader('application/x-www-form-urlencoded', bodyLink);
+            r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
 
         r.send(bodyLink);

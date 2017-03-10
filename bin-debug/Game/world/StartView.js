@@ -74,6 +74,21 @@ var StartView = (function (_super) {
         })
             .disable();
         this.addChild(rank);
+        var mask = new Mask(startGame, this, {
+            alpha: .8
+        });
+        this.addChildAt(mask, 9999);
+        this.addChild((new Button({
+            width: 200,
+            x: this.width - 250,
+            text: {
+                text: 'Close',
+                style: { size: 40 }
+            }
+        }))
+            .on(egret.TouchEvent.TOUCH_END, function () {
+            _this.removeChild(mask);
+        }, this));
         return [startGame, rank];
     };
     StartView.prototype.register = function () {
