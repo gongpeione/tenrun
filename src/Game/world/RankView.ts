@@ -1,62 +1,61 @@
 class RankView extends View {
 
     constructor (context, width, height) {
-
         super(context);
-
-        // this.width = width;
-        // this.height = height;
-        this.global = context;
-
         this.init();
     }
 
     init () {
 
-        const rect = Draw.rect(null, {
+        this.addChildAt(this.bg(), 0);
+        this.scroll();
+        
+    }
+
+    bg () {
+        return Draw.rect(null, {
             width: this.width,
             height: this.height,
         }).brush({
-            width: 100,
-            height: 100,
-            background: 0xff000000
+            background: Const.mainColor
         });
+    }
 
-        this.addChild(rect);
+    scroll () {
 
-        const btn = new Button({
-            width: 400,
-            height: 100,
-            img: 'btn',
-            background: 0x43453e,
-            text: {
-                text: 'Rank',
-                style: {
-                    size: 50
-                }
-            }
-        });
+        const list = new RankList();
+        this.addChild(list);
+        
+        
+        // const wrap: egret.Sprite = Draw.rect(null, {
+        //     width: 800,
+        // }).brush({
+        //     background: Const.btnColor
+        // });
 
-        this.addChild(btn);
+        // wrap.x = (this.width - wrap.width) / 2;
+        
+        // let listY = 0;
+        // fetch('https://node.geeku.net/tenrun/score')
+        //     .then((res: responseObject) => res.json())
+        //     .then(data => {
+        //         data.forEach(item => {
+        //             console.log(item);
+        //             wrap.addChild(Draw.text(
+        //                 item.name + item.score,
+        //                 {
+        //                     y: listY += 50,
+        //                     textColor: 0xff000000
+        //                 }
+        //             ));
+        //         });
+        //     })
 
-        btn.update({
-            width: 400,
-            height: 100,
-            img: 'btn',
-            // background: 0x43453e,
-            text: {
-                text: '开始游戏',
-                style: {
-                    size: 50
-                }
-            }
-        });
+        // var myscrollView:egret.ScrollView = new egret.ScrollView();
+        // myscrollView.setContent(wrap);
+        // myscrollView.width = 800;
+        // myscrollView.height = 200;
 
-        btn.on(egret.TouchEvent.TOUCH_END, (e) => {
-            console.log(btn);
-            // btn.disable();
-        }, this);
-
-        btn.center(true, true, this);
+        // this.addChild(myscrollView);
     }
 }

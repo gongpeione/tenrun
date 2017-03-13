@@ -38,6 +38,14 @@ class Button extends Component {
         if (buttonStyle.text) {
             this.addText(buttonStyle);
         }
+
+        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, () => {
+            this.alpha = .8;
+        }, this);
+
+        this.addEventListener(egret.TouchEvent.TOUCH_END, () => {
+            this.alpha = 1;
+        }, this);
     }
 
     private addRect (buttonStyle) {
@@ -82,8 +90,11 @@ class Button extends Component {
     }
 
     public update (newStyle) {
-        this.removeChildren()
-        this.init(newStyle);
+        // this.removeChildren()
+        // this.init(newStyle);
+
+        console.log(newStyle.text);
+        this.text.text = newStyle.text;
 
         return this;
     }

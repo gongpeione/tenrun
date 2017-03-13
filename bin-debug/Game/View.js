@@ -41,13 +41,12 @@ var View = (function (_super) {
         });
         _this.addChildAt(bgColor, 0);
         _this.addEventListener(AlertEvent.MSG, function (e) {
-            console.log(e);
             var alert = new Button({
                 y: _this.height - 200,
                 width: 400,
                 height: 80,
                 background: Const.btnColor,
-                alpha: 1,
+                alpha: .6,
                 text: {
                     text: e.msg,
                     style: {
@@ -60,7 +59,9 @@ var View = (function (_super) {
             _this.addChild(alert);
             setTimeout(function () {
                 var tw = egret.Tween.get(alert);
-                tw.to({ alpha: 0 }, 1000);
+                tw.to({ alpha: 0 }, 1000).call(function () {
+                    _this.removeChild(alert);
+                });
             }, 3000);
         }, _this);
         return _this;

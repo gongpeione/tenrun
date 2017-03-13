@@ -11,8 +11,10 @@ class Input extends Component {
     public inputStyle;
     public background;
     public padding;
+    
 
     private _input;
+    // private inputArea;
     constructor (inputStyle: InputStyle) {
         super();
 
@@ -86,7 +88,11 @@ class Input extends Component {
         return this._input;
     }
 
-    set input (i) {
-        this._input =i;
+    set input (i: egret.TextField) {
+        this._input = i;
+    }
+
+    setFocus () {
+        this.input.setFocus();
     }
 }

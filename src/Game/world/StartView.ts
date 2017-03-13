@@ -23,22 +23,35 @@ class StartView extends View {
 
         this.addChildAt(bg, 1);
 
-        const localStorage = egret.localStorage;
-        
+        const localStorage = egret.localStorage;        
         const username = localStorage.getItem('username');
-
     
         this.btns = this.addBtns();
 
-        
-        if (!username) {
-            
-            this.register();
+        if (!localStorage.getItem('music')) {
+            localStorage.setItem('music', 'ON');
+        }
 
+        if (!username) {
+            this.register();
         } else {
-            this.btns.forEach(btn => {
-                btn.enable();
-            });
+
+            if (!localStorage.getItem('tutorial')) {
+                this.tutorial(this.btns[0], () => {
+                    this.tutorial(this.btns[1], () => {
+                        this.tutorial(this.btns[2], () => {
+                            localStorage.setItem('tutorial', 'true');
+                            this.btns.forEach(btn => {
+                                btn.enable();
+                            });
+                        })
+                    });
+                });
+            } else {
+                this.btns.forEach(btn => {
+                    btn.enable();
+                });
+            }
         }
         
     }
@@ -69,7 +82,7 @@ class StartView extends View {
         this.addChild(startGame);
 
         const rank = new Button({
-            width: 100,
+            width: 120,
             height: 100,
             background: Const.btnColor,
             text: {
@@ -84,36 +97,63 @@ class StartView extends View {
             y: btnOffsetY
         })
         .on(egret.TouchEvent.TOUCH_END, () => {
-            console.log('rank');
+            this.global.rank();
         }, this)
         .disable();
 
         this.addChild(rank);
 
-        const mask = new Mask(rank, this, {
+        const music = new Button({
+            width: 120,
+            height: 100,
+            background: Const.btnColor,
+            text: {
+                text: '♫ ' + localStorage.getItem('music'),
+                style: {
+                    size: 30
+                }
+            }
+        })
+        .center(true, true, this, {
+            x: 170,
+            y: btnOffsetY
+        })
+        .on(egret.TouchEvent.TOUCH_END, () => {
+            const musicStatus = localStorage.getItem('music') === 'ON' ? 'OFF' : 'ON';
+            music.update({
+                text: '♫ ' + musicStatus
+            });
+            localStorage.setItem('music', musicStatus);
+        }, this)
+        .disable();
+
+        this.addChild(music);
+
+        return [music, rank, startGame];
+    }
+
+    tutorial (btn, callback = () => {}) {
+
+        const mask = new Mask(btn, this, {
             alpha: .8
         });
         this.addChildAt(mask, 9999);
 
-        this.addChild(
-            (
-                new Button(
-                    {
-                        width: 200,
-                        x: this.width - 250,
-                        text: {
-                            text: 'Close', 
-                            style: { size: 40 } 
-                        }
-                })
-            )
-            .on(egret.TouchEvent.TOUCH_END, () => {
-                this.removeChild(mask);
-            }, this)
-        );
-
-
-        return [startGame, rank];
+        const next = new Button({
+            width: 200,
+            x: this.width - 250,
+            text: {
+                text: 'Next', 
+                style: { size: 40 } 
+            }
+        })
+        .on(egret.TouchEvent.TOUCH_END, () => {
+            this.removeChild(mask);
+            this.removeChild(next);
+            callback();
+        }, this);
+        this.addChildAt(next, 9999);
+        
     }
 
     register () {
@@ -143,6 +183,7 @@ class StartView extends View {
         .center(true, false, this);
 
         this.addChild(usernameInput);
+        usernameInput.setFocus();
 
         const submitUsername = new Button({
             width: 200,

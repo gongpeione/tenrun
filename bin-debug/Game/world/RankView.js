@@ -10,52 +10,50 @@ var RankView = (function (_super) {
     __extends(RankView, _super);
     function RankView(context, width, height) {
         var _this = _super.call(this, context) || this;
-        // this.width = width;
-        // this.height = height;
-        _this.global = context;
         _this.init();
         return _this;
     }
     RankView.prototype.init = function () {
-        var rect = Draw.rect(null, {
+        this.addChildAt(this.bg(), 0);
+        this.scroll();
+    };
+    RankView.prototype.bg = function () {
+        return Draw.rect(null, {
             width: this.width,
             height: this.height,
         }).brush({
-            width: 100,
-            height: 100,
-            background: 0xff000000
+            background: Const.mainColor
         });
-        this.addChild(rect);
-        var btn = new Button({
-            width: 400,
-            height: 100,
-            img: 'btn',
-            background: 0x43453e,
-            text: {
-                text: 'Rank',
-                style: {
-                    size: 50
-                }
-            }
-        });
-        this.addChild(btn);
-        btn.update({
-            width: 400,
-            height: 100,
-            img: 'btn',
-            // background: 0x43453e,
-            text: {
-                text: '开始游戏',
-                style: {
-                    size: 50
-                }
-            }
-        });
-        btn.on(egret.TouchEvent.TOUCH_END, function (e) {
-            console.log(btn);
-            // btn.disable();
-        }, this);
-        btn.center(true, true, this);
+    };
+    RankView.prototype.scroll = function () {
+        var list = new RankList();
+        this.addChild(list);
+        // const wrap: egret.Sprite = Draw.rect(null, {
+        //     width: 800,
+        // }).brush({
+        //     background: Const.btnColor
+        // });
+        // wrap.x = (this.width - wrap.width) / 2;
+        // let listY = 0;
+        // fetch('https://node.geeku.net/tenrun/score')
+        //     .then((res: responseObject) => res.json())
+        //     .then(data => {
+        //         data.forEach(item => {
+        //             console.log(item);
+        //             wrap.addChild(Draw.text(
+        //                 item.name + item.score,
+        //                 {
+        //                     y: listY += 50,
+        //                     textColor: 0xff000000
+        //                 }
+        //             ));
+        //         });
+        //     })
+        // var myscrollView:egret.ScrollView = new egret.ScrollView();
+        // myscrollView.setContent(wrap);
+        // myscrollView.width = 800;
+        // myscrollView.height = 200;
+        // this.addChild(myscrollView);
     };
     return RankView;
 }(View));

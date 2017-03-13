@@ -10,6 +10,8 @@ class GameView extends View {
     private obstacle: egret.Sprite;
     private scoreText: egret.TextField;
     private score = 0;
+    private pauseBtn;
+    private tw: egret.Tween;
     private figureRect;
     private figurePoint = {
         x: 200,
@@ -25,6 +27,7 @@ class GameView extends View {
     }
 
     private isFalling = false;
+    private isPause = false;
     private jumpTimer;
     private jumpCounter = -22;
     private fallTimer;
@@ -52,6 +55,38 @@ class GameView extends View {
         this.addChild(this.figure);
         this.addChild(this.figureRect);
 
+        this.pauseBtn = new Button({
+            width: 120,
+            height: 60,
+            x: 80,
+            y: 10,
+            background: Const.btnColor,
+            text: {
+                text: 'Pause',
+                style: {
+                    size: 30
+                }
+            }
+        })
+        .on(egret.TouchEvent.TOUCH_BEGIN, (e: egret.TouchEvent) => {
+            e.stopPropagation();
+            if (this.isPause) {
+                this.play();
+                this.isPause = false;
+                this.pauseBtn.update({
+                    text: 'Pause'
+                });
+            } else {
+                this.pause();
+                this.isPause = true;
+                this.pauseBtn.update({
+                    text: 'Play'
+                });
+            }
+        }, this)
+
+        this.addChild(this.pauseBtn);
+
         // this.createScore();
         // this.addChildAt(this.score, 99);
 
@@ -73,11 +108,25 @@ class GameView extends View {
         
         let isHit = false;
 
+        const bg: egret.Sound = RES.getRes("bg");
+        let bgPlay;
+        if (localStorage.getItem('music') === 'ON') {
+            bgPlay = bg.play(0, -1);
+            bgPlay.volume = .2;
+        }
+
         const self = this;
         function hit () {
             isHit = this.hitTest(this.figureRect, this.obstacle);
             // console.log(isHit);
             if (isHit) {
+
+                if (localStorage.getItem('music') === 'ON') {
+                    const over: egret.Sound = RES.getRes("hit");
+                    over.play(0, 1);
+                    bgPlay && bgPlay.stop();
+                }
+
                 egret.stopTick(hit, this);
                 this.gameover();
             }
@@ -85,8 +134,8 @@ class GameView extends View {
         }
         egret.startTick(hit, this);
 
-        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this);        
-        this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this, true);        
+        this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this, true);
 
         this.touchEnabled = true;
 
@@ -134,26 +183,7 @@ class GameView extends View {
                 }
             }
         });
-        // const box = Draw.rect(null, {
-        //     x: boxBody.position[0],
-        //     y: boxBody.position[1],
-        //     width: 200,
-        //     height: 100,
-        //     rotation: boxBody.angle
-        // }).brush({
-        //     background: 0xff0000
-        // });
         this.addChild(startSign);
-
-        // const plane = Draw.rect(null, {
-        //     x: 0,
-        //     y: planeBody.position[1],
-        //     width: 2000,
-        //     height: 10
-        // }).brush({
-        //     background: 0x00ff00
-        // });
-        // this.addChild(plane);
 
         function animate(){
             requestAnimationFrame(animate);
@@ -172,7 +202,7 @@ class GameView extends View {
         
     }
 
-     private createBitmapByName(name:string):egret.Bitmap {
+    private createBitmapByName(name:string):egret.Bitmap {
         var result:egret.Bitmap = new egret.Bitmap();
         var texture:egret.Texture = RES.getRes(name);
         result.texture = texture;
@@ -249,6 +279,10 @@ class GameView extends View {
 
     jump (e: egret.TouchEvent) {
 
+        if (e.target === this.pauseBtn) {
+            return;
+        }
+
         // if still falling then cannot jump again
         if (this.isFalling) {
             return;
@@ -257,6 +291,10 @@ class GameView extends View {
         this.figure.animation.gotoAndStop('run', 1);
 
         this.jumpTimer = setInterval(() => {
+
+            if (this.isPause) {
+                return;
+            }
 
             // if jump to the highest point
             if (this.jumpCounter === 0) {
@@ -274,6 +312,10 @@ class GameView extends View {
 
     falling (e: egret.TouchEvent) {
 
+        if (e.target === this.pauseBtn) {
+            return;
+        }
+        
         clearInterval(this.jumpTimer);
 
         // this.fallCounter = -this.jumpCounter;
@@ -283,6 +325,10 @@ class GameView extends View {
         this.touchEnabled = false;
 
         this.fallTimer = setInterval(() => {
+
+            if (this.isPause) {
+                return;
+            }
 
             if (this.fallCounter >= 22) {
 
@@ -318,30 +364,19 @@ class GameView extends View {
         
         // const maxHeight = 180;
         const randomHeight = this.randomHeight(100, 195);
-        if (!this.obstacle) {
-            this.obstacle = Draw.rect(null, {
-                width: 60,
-                height: randomHeight,
-                x: this.width,
-                y: this.height - this.horizontalLine - randomHeight + 20
-            }).brush({
-                background: Const.mainColor,
-            });
-        } else {
-            Draw.rect(this.obstacle, {
-                width: 60,
-                height: randomHeight,
-                x: this.width,
-                y: this.height - this.horizontalLine - randomHeight + 20
-            }).brush({
-                background: Const.mainColor,
-            });
-        }
+        this.obstacle = Draw.rect(this.obstacle ? this.obstacle : null, {
+            width: 60,
+            height: randomHeight,
+            x: this.width,
+            y: this.height - this.horizontalLine - randomHeight + 20
+        }).brush({
+            background: Const.mainColor,
+        });
 
         // this.addChild(world);
         
-        const tw = egret.Tween.get( this.obstacle );
-        tw.to({ x: -100 }, 2000 - this.speed).call(() => {
+        this.tw = egret.Tween.get(this.obstacle);
+        this.tw.to({ x: -100 }, 2000 - this.speed).call(() => {
             this.score += 100;
             this.scoreText.text = this.score + '';
             this.createObstacle();
@@ -366,6 +401,19 @@ class GameView extends View {
         return rect1.intersects(rect2);
     }
 
+    pause () {
+        this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this);        
+        this.removeEventListener(egret.TouchEvent.TOUCH_END, this.falling, this);
+
+        this.tw.pause();
+        this.figure.animation.stop('run');
+    }
+
+    play () {
+        this.tw.play();
+        this.figure.animation.play();
+    }
+
     gameover () {
 
         egret.Tween.removeAllTweens();
@@ -373,13 +421,15 @@ class GameView extends View {
         clearInterval(this.fallTimer);                
         this.touchEnabled = false;
 
-        this.addChild(Draw.rect(null, {
+        const mask = Draw.rect(null, {
             width: this.width,
             height: this.height,
             alpha: .8
         }).brush({
             background: 0xff000000
-        }));
+        });
+        mask.touchEnabled = true;
+        this.addChild(mask);
 
         const retry = new Button({
             width: 200,

@@ -20,6 +20,7 @@ var Button = (function (_super) {
         return _this;
     }
     Button.prototype.init = function (buttonStyle) {
+        var _this = this;
         this.addRect(buttonStyle);
         if (buttonStyle.img) {
             this.addImg(buttonStyle);
@@ -27,6 +28,12 @@ var Button = (function (_super) {
         if (buttonStyle.text) {
             this.addText(buttonStyle);
         }
+        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function () {
+            _this.alpha = .8;
+        }, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_END, function () {
+            _this.alpha = 1;
+        }, this);
     };
     Button.prototype.addRect = function (buttonStyle) {
         var rect = Draw.rect(null, {
@@ -65,8 +72,10 @@ var Button = (function (_super) {
         this.addChild(text);
     };
     Button.prototype.update = function (newStyle) {
-        this.removeChildren();
-        this.init(newStyle);
+        // this.removeChildren()
+        // this.init(newStyle);
+        console.log(newStyle.text);
+        this.text.text = newStyle.text;
         return this;
     };
     return Button;

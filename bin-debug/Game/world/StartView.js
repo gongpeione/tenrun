@@ -19,19 +19,37 @@ var StartView = (function (_super) {
         return _this;
     }
     StartView.prototype.init = function () {
+        var _this = this;
         var bg = new egret.Bitmap();
         bg.texture = RES.getRes('start_bg');
         this.addChildAt(bg, 1);
         var localStorage = egret.localStorage;
         var username = localStorage.getItem('username');
         this.btns = this.addBtns();
+        if (!localStorage.getItem('music')) {
+            localStorage.setItem('music', 'ON');
+        }
         if (!username) {
             this.register();
         }
         else {
-            this.btns.forEach(function (btn) {
-                btn.enable();
-            });
+            if (!localStorage.getItem('tutorial')) {
+                this.tutorial(this.btns[0], function () {
+                    _this.tutorial(_this.btns[1], function () {
+                        _this.tutorial(_this.btns[2], function () {
+                            localStorage.setItem('tutorial', 'true');
+                            _this.btns.forEach(function (btn) {
+                                btn.enable();
+                            });
+                        });
+                    });
+                });
+            }
+            else {
+                this.btns.forEach(function (btn) {
+                    btn.enable();
+                });
+            }
         }
     };
     StartView.prototype.addBtns = function () {
@@ -58,7 +76,7 @@ var StartView = (function (_super) {
             .disable();
         this.addChild(startGame);
         var rank = new Button({
-            width: 100,
+            width: 120,
             height: 100,
             background: Const.btnColor,
             text: {
@@ -73,26 +91,57 @@ var StartView = (function (_super) {
             y: btnOffsetY
         })
             .on(egret.TouchEvent.TOUCH_END, function () {
-            console.log('rank');
+            _this.global.rank();
         }, this)
             .disable();
         this.addChild(rank);
-        var mask = new Mask(rank, this, {
+        var music = new Button({
+            width: 120,
+            height: 100,
+            background: Const.btnColor,
+            text: {
+                text: '♫ ' + localStorage.getItem('music'),
+                style: {
+                    size: 30
+                }
+            }
+        })
+            .center(true, true, this, {
+            x: 170,
+            y: btnOffsetY
+        })
+            .on(egret.TouchEvent.TOUCH_END, function () {
+            var musicStatus = localStorage.getItem('music') === 'ON' ? 'OFF' : 'ON';
+            music.update({
+                text: '♫ ' + musicStatus
+            });
+            localStorage.setItem('music', musicStatus);
+        }, this)
+            .disable();
+        this.addChild(music);
+        return [music, rank, startGame];
+    };
+    StartView.prototype.tutorial = function (btn, callback) {
+        var _this = this;
+        if (callback === void 0) { callback = function () { }; }
+        var mask = new Mask(btn, this, {
             alpha: .8
         });
         this.addChildAt(mask, 9999);
-        this.addChild((new Button({
+        var next = new Button({
             width: 200,
             x: this.width - 250,
             text: {
-                text: 'Close',
+                text: 'Next',
                 style: { size: 40 }
             }
-        }))
+        })
             .on(egret.TouchEvent.TOUCH_END, function () {
             _this.removeChild(mask);
-        }, this));
-        return [startGame, rank];
+            _this.removeChild(next);
+            callback();
+        }, this);
+        this.addChildAt(next, 9999);
     };
     StartView.prototype.register = function () {
         var _this = this;
@@ -118,6 +167,7 @@ var StartView = (function (_super) {
         })
             .center(true, false, this);
         this.addChild(usernameInput);
+        usernameInput.setFocus();
         var submitUsername = new Button({
             width: 200,
             height: 80,

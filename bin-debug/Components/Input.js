@@ -8,6 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Input = (function (_super) {
     __extends(Input, _super);
+    // private inputArea;
     function Input(inputStyle) {
         var _this = _super.call(this) || this;
         Object.assign(_this, inputStyle);
@@ -74,6 +75,9 @@ var Input = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Input.prototype.setFocus = function () {
+        this.input.setFocus();
+    };
     return Input;
 }(Component));
 __reflect(Input.prototype, "Input");
