@@ -40,6 +40,29 @@ var View = (function (_super) {
             background: 0xffffff
         });
         _this.addChildAt(bgColor, 0);
+        _this.addEventListener(AlertEvent.MSG, function (e) {
+            console.log(e);
+            var alert = new Button({
+                y: _this.height - 200,
+                width: 400,
+                height: 80,
+                background: Const.btnColor,
+                alpha: 1,
+                text: {
+                    text: e.msg,
+                    style: {
+                        size: 30,
+                        color: 0xfffff
+                    }
+                }
+            })
+                .center(true, false, _this);
+            _this.addChild(alert);
+            setTimeout(function () {
+                var tw = egret.Tween.get(alert);
+                tw.to({ alpha: 0 }, 1000);
+            }, 3000);
+        }, _this);
         return _this;
     }
     return View;

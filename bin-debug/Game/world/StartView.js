@@ -72,9 +72,12 @@ var StartView = (function (_super) {
             x: -170,
             y: btnOffsetY
         })
+            .on(egret.TouchEvent.TOUCH_END, function () {
+            console.log('rank');
+        }, this)
             .disable();
         this.addChild(rank);
-        var mask = new Mask(startGame, this, {
+        var mask = new Mask(rank, this, {
             alpha: .8
         });
         this.addChildAt(mask, 9999);
@@ -129,13 +132,23 @@ var StartView = (function (_super) {
             }
         })
             .on(egret.TouchEvent.TOUCH_END, function (e) {
-            localStorage.setItem('username', usernameInput.input.text);
-            _this.btns.forEach(function (btn) {
-                btn.enable();
-            });
-            _this.removeChild(submitUsername);
-            _this.removeChild(usernameInput);
-            _this.removeChild(mask);
+            console.log(usernameInput.input.text);
+            if (!usernameInput.input.text) {
+                var empty = new AlertEvent(AlertEvent.MSG, true);
+                empty.msg = 'Username cannot be empty';
+                _this.dispatchEvent(empty);
+                console.log(empty);
+                return;
+            }
+            else {
+                localStorage.setItem('username', usernameInput.input.text);
+                _this.btns.forEach(function (btn) {
+                    btn.enable();
+                });
+                _this.removeChild(submitUsername);
+                _this.removeChild(usernameInput);
+                _this.removeChild(mask);
+            }
         }, this)
             .center(true, false, this, {
             x: 0,

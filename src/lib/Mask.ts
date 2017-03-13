@@ -3,6 +3,7 @@ class Mask extends egret.DisplayObjectContainer {
     context;
     gap;
     background: number;
+    private maskChunks: Array<egret.Sprite> = [];
     constructor (hole, context, style?) {
         super();
 
@@ -10,7 +11,7 @@ class Mask extends egret.DisplayObjectContainer {
         this.context= context;
 
         style = style || {};
-        
+
         this.gap = style.gap || 10;        
         this.background = style.background || 0xff000000;
         this.alpha = style.alpha || .8;
@@ -19,15 +20,17 @@ class Mask extends egret.DisplayObjectContainer {
     }
 
     init () {
-        const top = Draw.rect(null, {
+        // top
+        this.maskChunks.push(Draw.rect(null, {
             width: this.context.width,
             height: this.hole.y - this.gap,
             // alpha: .8
         }).brush({
             background: this.background
-        });
+        }));
 
-        const right = Draw.rect(null, {
+        // right
+        this.maskChunks.push(Draw.rect(null, {
             x: this.hole.x + this.hole.width + this.gap,
             y: this.hole.y - this.gap,
             width: this.context.width - this.hole.x - this.hole.width - this.gap,
@@ -35,29 +38,31 @@ class Mask extends egret.DisplayObjectContainer {
             // alpha: .8
         }).brush({
             background: this.background
-        });
+        }));
 
-        const bottom = Draw.rect(null, {
+        // bottom
+        this.maskChunks.push(Draw.rect(null, {
             y: this.hole.y + this.hole.height + this.gap,
             width: this.context.width,
             height: this.context.height - this.hole.y - this.hole.height - this.gap,
             // alpha: .8
         }).brush({
             background: this.background
-        });
+        }));
 
-        const left = Draw.rect(null, {
+        // left
+        this.maskChunks.push(Draw.rect(null, {
             y: this.hole.y - this.gap,
             width: this.hole.x - this.gap,
             height: this.hole.height + this.gap * 2,
             // alpha: .8
         }).brush({
             background: this.background
-        });
+        }));
 
-        this.addChild(top);
-        this.addChild(right);
-        this.addChild(bottom);
-        this.addChild(left);
+        this.maskChunks.forEach(chunk => {
+            chunk.touchEnabled = true;
+            this.addChild(chunk);
+        });
     }
 }

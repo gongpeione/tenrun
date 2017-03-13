@@ -18,16 +18,17 @@ var game_file_list = [
 	"bin-debug/Components/Button.js",
 	"bin-debug/const.js",
 	"bin-debug/Components/Input.js",
+	"bin-debug/Game/AlertEvent.js",
 	"bin-debug/lib/Fetch.js",
 	"bin-debug/Game/game/GameView.js",
-	"bin-debug/lib/Draw.js",
+	"bin-debug/Main.js",
 	"bin-debug/Game/world/RankView.js",
 	"bin-debug/Game/world/StartView.js",
 	"bin-debug/lib/Mask.js",
 	"bin-debug/lib/p2DebugDraw.js",
 	"bin-debug/lib/Utils.js",
 	"bin-debug/Loading.js",
-	"bin-debug/Main.js",
+	"bin-debug/lib/Draw.js",
 	//----auto game_file_list end----
 ];
 

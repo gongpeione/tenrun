@@ -10,6 +10,7 @@ var Mask = (function (_super) {
     __extends(Mask, _super);
     function Mask(hole, context, style) {
         var _this = _super.call(this) || this;
+        _this.maskChunks = [];
         _this.hole = hole;
         _this.context = context;
         style = style || {};
@@ -20,38 +21,43 @@ var Mask = (function (_super) {
         return _this;
     }
     Mask.prototype.init = function () {
-        var top = Draw.rect(null, {
+        var _this = this;
+        // top
+        this.maskChunks.push(Draw.rect(null, {
             width: this.context.width,
             height: this.hole.y - this.gap,
         }).brush({
             background: this.background
-        });
-        var right = Draw.rect(null, {
+        }));
+        // right
+        this.maskChunks.push(Draw.rect(null, {
             x: this.hole.x + this.hole.width + this.gap,
             y: this.hole.y - this.gap,
             width: this.context.width - this.hole.x - this.hole.width - this.gap,
             height: this.hole.height + this.gap * 2,
         }).brush({
             background: this.background
-        });
-        var bottom = Draw.rect(null, {
+        }));
+        // bottom
+        this.maskChunks.push(Draw.rect(null, {
             y: this.hole.y + this.hole.height + this.gap,
             width: this.context.width,
             height: this.context.height - this.hole.y - this.hole.height - this.gap,
         }).brush({
             background: this.background
-        });
-        var left = Draw.rect(null, {
+        }));
+        // left
+        this.maskChunks.push(Draw.rect(null, {
             y: this.hole.y - this.gap,
             width: this.hole.x - this.gap,
             height: this.hole.height + this.gap * 2,
         }).brush({
             background: this.background
+        }));
+        this.maskChunks.forEach(function (chunk) {
+            chunk.touchEnabled = true;
+            _this.addChild(chunk);
         });
-        this.addChild(top);
-        this.addChild(right);
-        this.addChild(bottom);
-        this.addChild(left);
     };
     return Mask;
 }(egret.DisplayObjectContainer));

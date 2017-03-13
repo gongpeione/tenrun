@@ -83,11 +83,14 @@ class StartView extends View {
             x: -170,
             y: btnOffsetY
         })
+        .on(egret.TouchEvent.TOUCH_END, () => {
+            console.log('rank');
+        }, this)
         .disable();
 
         this.addChild(rank);
 
-        const mask = new Mask(startGame, this, {
+        const mask = new Mask(rank, this, {
             alpha: .8
         });
         this.addChildAt(mask, 9999);
@@ -156,15 +159,26 @@ class StartView extends View {
         })
         .on(egret.TouchEvent.TOUCH_END, (e) => {
 
-            localStorage.setItem('username', usernameInput.input.text);
+            console.log(usernameInput.input.text);
+            if (!usernameInput.input.text) {
+                const empty: AlertEvent = new AlertEvent(AlertEvent.MSG, true);
+                empty.msg = 'Username cannot be empty';
+                this.dispatchEvent(empty);
+                console.log(empty);
+                return;
+            } else {
+                localStorage.setItem('username', usernameInput.input.text);
 
-            this.btns.forEach(btn => {
-                btn.enable();
-            });
+                this.btns.forEach(btn => {
+                    btn.enable();
+                });
 
-            this.removeChild(submitUsername);
-            this.removeChild(usernameInput);
-            this.removeChild(mask);
+                this.removeChild(submitUsername);
+                this.removeChild(usernameInput);
+                this.removeChild(mask);
+            }
+
+            
 
         }, this)
         .center(true, false, this, {
@@ -173,5 +187,6 @@ class StartView extends View {
         });
 
         this.addChild(submitUsername);
+        
     }
 }

@@ -40,6 +40,32 @@ class View extends egret.DisplayObjectContainer {
         });
 
         this.addChildAt(bgColor, 0);
+        
+        this.addEventListener(AlertEvent.MSG, (e: AlertEvent) => {
+            console.log(e);
+            const alert = new Button({
+                y: this.height - 200,
+                width: 400,
+                height: 80,
+                background: Const.btnColor,
+                alpha: 1,
+                text: {
+                    text: e.msg,
+                    style: {
+                        size: 30,
+                        color: 0xfffff
+                    }
+                }
+            })
+            .center(true, false, this);
+
+            this.addChild(alert);
+
+            setTimeout(() => {
+                const tw = egret.Tween.get(alert);
+                tw.to({ alpha: 0 }, 1000);
+            }, 3000);
+        }, this);
     }
 
 }
