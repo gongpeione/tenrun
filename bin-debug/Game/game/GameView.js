@@ -327,11 +327,11 @@ var GameView = (function (_super) {
     GameView.prototype.pause = function () {
         this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this);
         this.removeEventListener(egret.TouchEvent.TOUCH_END, this.falling, this);
-        this.tw.pause();
+        this.tw.setPaused(true);
         this.figure.animation.stop('run');
     };
     GameView.prototype.play = function () {
-        this.tw.play();
+        this.tw.setPaused(false);
         this.figure.animation.play();
     };
     GameView.prototype.gameover = function () {

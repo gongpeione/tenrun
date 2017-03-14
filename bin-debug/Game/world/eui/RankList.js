@@ -15,20 +15,14 @@ var RankList = (function (_super) {
         return _this;
     }
     RankList.prototype.complete = function () {
-        var dsListHeros = [
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
+        var rankListArray = [
+            { index: '', name: "加载中", score: '' },
         ];
-        this.rankList.dataProvider = new eui.ArrayCollection(dsListHeros);
+        this.rankList.dataProvider = new eui.ArrayCollection(rankListArray);
+        this.rankList.itemRenderer = RankItem;
+    };
+    RankList.prototype.updateData = function (rankListArray) {
+        this.rankList.dataProvider = new eui.ArrayCollection(rankListArray);
         this.rankList.itemRenderer = RankItem;
     };
     RankList.prototype.createChildren = function () {

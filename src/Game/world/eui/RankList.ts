@@ -10,21 +10,16 @@ class RankList extends eui.Component {
     }
 
     complete () {
-         var dsListHeros:Array<Object> = [
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
-            { name: "伊文捷琳", score: '1000' },
+        var rankListArray:Array<Object> = [
+            { index: '', name: "加载中", score: '' },
         ];
-        this.rankList.dataProvider = new eui.ArrayCollection( dsListHeros );
+        this.rankList.dataProvider = new eui.ArrayCollection( rankListArray );
 
+        this.rankList.itemRenderer = RankItem;
+    }
+
+    updateData (rankListArray: Array<Object>) {
+        this.rankList.dataProvider = new eui.ArrayCollection(rankListArray);
         this.rankList.itemRenderer = RankItem;
     }
 

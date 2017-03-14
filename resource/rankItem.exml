@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin width="600" height="50" xmlns:e="http://ns.egret.com/eui" class="rankItem">
-	<e:Label x="0" y="10" textColor="0x020202" text="{data.name}" textAlign="left"/>
-	<e:Label x="439" y="10" textColor="0x000000" text="{data.score}"/>
+<e:Skin width="800" height="80" xmlns:e="http://ns.egret.com/eui" class="rankItem">
+	<e:Label x="107.31" y="10" text="{data.name}" textAlign="left" textColor="0xffffff" size="50"/>
+	<e:Label y="10" text="{data.score}" x="500" textColor="0xffffff" textAlign="right" anchorOffsetX="0" width="300" size="50"/>
+	<e:Label text="{data.index}" x="0" y="10" size="50" textAlign="left" width="100"/>
 </e:Skin>

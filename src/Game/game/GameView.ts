@@ -405,12 +405,12 @@ class GameView extends View {
         this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this);        
         this.removeEventListener(egret.TouchEvent.TOUCH_END, this.falling, this);
 
-        this.tw.pause();
+        this.tw.setPaused(true);
         this.figure.animation.stop('run');
     }
 
     play () {
-        this.tw.play();
+        this.tw.setPaused(false);
         this.figure.animation.play();
     }
 

@@ -7,7 +7,7 @@ class RankView extends View {
 
     init () {
 
-        this.addChildAt(this.bg(), 0);
+        this.addChildAt(this.bg(), 1);
         this.scroll();
         
     }
@@ -23,9 +23,19 @@ class RankView extends View {
 
     scroll () {
 
-        const list = new RankList();
-        this.addChild(list);
+        const listBg = Draw.rect(null, {
+            width: 840,
+            height: 440,
+            x: 148,
+            y: 142
+        }).brush({
+            background: Const.btnColor
+        });
         
+        this.addChild(listBg);
+
+        const list: RankList = new RankList();
+        this.addChild(list);
         
         // const wrap: egret.Sprite = Draw.rect(null, {
         //     width: 800,
@@ -36,20 +46,23 @@ class RankView extends View {
         // wrap.x = (this.width - wrap.width) / 2;
         
         // let listY = 0;
-        // fetch('https://node.geeku.net/tenrun/score')
-        //     .then((res: responseObject) => res.json())
-        //     .then(data => {
-        //         data.forEach(item => {
-        //             console.log(item);
-        //             wrap.addChild(Draw.text(
-        //                 item.name + item.score,
-        //                 {
-        //                     y: listY += 50,
-        //                     textColor: 0xff000000
-        //                 }
-        //             ));
-        //         });
-        //     })
+        fetch('https://node.geeku.net/tenrun/score')
+            .then((res: responseObject) => res.json())
+            .then(data => {
+                const _list = [];
+                let index = 1;
+                data.forEach(item => {
+                    console.log(item);
+                    _list.push({
+                        index: index + '',
+                        name: item.name,
+                        score: item.score + ''
+                    });
+                    index++;
+                });
+                
+                list.updateData(_list);
+            })
 
         // var myscrollView:egret.ScrollView = new egret.ScrollView();
         // myscrollView.setContent(wrap);

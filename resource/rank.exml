@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin width="1136" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-	<e:Scroller id="rankScroll" width="600" height="400" x="268" y="162.42" anchorOffsetX="0">
-		<e:List id="rankList" width="100%" height="100%"/>
+    <e:Image height="400" width="800" x="169.7" y="163.64" source="btn" anchorOffsetX="0" anchorOffsetY="0"/>
+	<e:Scroller id="rankScroll" width="800" height="400" x="168" y="162.42" anchorOffsetX="0">
+		<e:List id="rankList" width="800" height="100%" anchorOffsetX="0" x="0" y="1.22"/>
 	</e:Scroller>
+	<e:Label text="Rank" x="470" y="32.12" size="80"/>
 </e:Skin>
