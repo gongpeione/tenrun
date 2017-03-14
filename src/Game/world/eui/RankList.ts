@@ -39,9 +39,4 @@ class RankItem extends eui.ItemRenderer {
         super.createChildren();
     }
 
-    /*protected dataChanged():void{
-     console.log( "\tCheckbox:", this.data.checked );
-     //this.cb.selected = this.data.checked;
-     }*/
-
 }

@@ -99,12 +99,6 @@ class GameView extends View {
         this.scoreText.y = 20;
         this.scoreText.textAlign = egret.HorizontalAlign.RIGHT;
         this.addChild(this.scoreText);
-
-        let jump = -22;
-        let jumpTimer;
-        let fall = 0;
-        let fallTimer;
-        let isFalling = false;
         
         let isHit = false;
 
@@ -279,12 +273,8 @@ class GameView extends View {
 
     jump (e: egret.TouchEvent) {
 
-        if (e.target === this.pauseBtn) {
-            return;
-        }
-
-        // if still falling then cannot jump again
-        if (this.isFalling) {
+        // if still falling or click pause btn then cannot jump again
+        if (this.isFalling || e.target === this.pauseBtn) {
             return;
         }
 
