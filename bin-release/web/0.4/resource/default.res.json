@@ -1,0 +1,56 @@
+{
+	"groups": [
+		{
+			"keys": "btn,start_bg,Tenrun_ske_json,tenrun,tenrun_texture,sand_json,sand_png,hit,bg",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/圣诞节背景，无缝的盖瓦样式纹理葡萄酒-75310084.png",
+			"type": "image",
+			"name": "btn",
+			"scale9grid": "44,41,410,418"
+		},
+		{
+			"url": "assets/Artboard.png",
+			"type": "image",
+			"name": "start_bg"
+		},
+		{
+			"url": "Tenrun_tex.json",
+			"type": "json",
+			"name": "tenrun"
+		},
+		{
+			"url": "Tenrun_tex.png",
+			"type": "image",
+			"name": "tenrun_texture"
+		},
+		{
+			"url": "Tenrun_ske.json",
+			"type": "json",
+			"name": "Tenrun_ske_json"
+		},
+		{
+			"url": "sand.json",
+			"type": "json",
+			"name": "sand_json"
+		},
+		{
+			"url": "sand.png",
+			"type": "image",
+			"name": "sand_png"
+		},
+		{
+			"url": "hit.mp3",
+			"type": "sound",
+			"name": "hit"
+		},
+		{
+			"url": "bg.mp3",
+			"type": "sound",
+			"name": "bg"
+		}
+	]
+}

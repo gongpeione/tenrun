@@ -85,26 +85,21 @@ var GameView = (function (_super) {
         this.scoreText.y = 20;
         this.scoreText.textAlign = egret.HorizontalAlign.RIGHT;
         this.addChild(this.scoreText);
-        var jump = -22;
-        var jumpTimer;
-        var fall = 0;
-        var fallTimer;
-        var isFalling = false;
         var isHit = false;
-        var bg = RES.getRes("bg");
+        this.bg = RES.getRes("bg");
         var bgPlay;
+        var overPlay;
         if (localStorage.getItem('music') === 'ON') {
-            bgPlay = bg.play(0, -1);
+            bgPlay = this.bg.play(0, -1);
             bgPlay.volume = .2;
         }
-        var self = this;
         function hit() {
             isHit = this.hitTest(this.figureRect, this.obstacle);
             // console.log(isHit);
             if (isHit) {
                 if (localStorage.getItem('music') === 'ON') {
-                    var over = RES.getRes("hit");
-                    over.play(0, 1);
+                    this.overbg = RES.getRes("hit");
+                    overPlay = this.overbg.play(0, 1);
                     bgPlay && bgPlay.stop();
                 }
                 egret.stopTick(hit, this);
@@ -113,6 +108,11 @@ var GameView = (function (_super) {
             return false;
         }
         egret.startTick(hit, this);
+        this.backBtn.on(egret.TouchEvent.TOUCH_END, function () {
+            overPlay && overPlay.stop();
+            bgPlay && bgPlay.stop();
+            egret.stopTick(hit, _this);
+        }, this);
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this, true);
         this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this, true);
         this.touchEnabled = true;
@@ -167,6 +167,16 @@ var GameView = (function (_super) {
         }
         // this.addEventListener(egret.Event.ENTER_FRAME, animate, this);
         animate();
+        if (!localStorage.getItem('gameTutorialed')) {
+            var gameTutorial = new AlertEvent(AlertEvent.MSG, true);
+            gameTutorial.msg = '长按跳跃，跳跃高度与长按时间有关';
+            this.dispatchEvent(gameTutorial);
+            localStorage.setItem('gameTutorialed', 'true');
+            this.pause();
+            setTimeout(function () {
+                _this.play();
+            }, 3000);
+        }
     };
     GameView.prototype.createBitmapByName = function (name) {
         var result = new egret.Bitmap();
@@ -234,11 +244,8 @@ var GameView = (function (_super) {
     };
     GameView.prototype.jump = function (e) {
         var _this = this;
-        if (e.target === this.pauseBtn) {
-            return;
-        }
-        // if still falling then cannot jump again
-        if (this.isFalling) {
+        // if still falling or click pause btn then cannot jump again
+        if (this.isFalling || e.target === this.pauseBtn) {
             return;
         }
         this.figure.animation.gotoAndStop('run', 1);
@@ -262,7 +269,7 @@ var GameView = (function (_super) {
             return;
         }
         clearInterval(this.jumpTimer);
-        // this.fallCounter = -this.jumpCounter;
+        this.fallCounter = -this.jumpCounter;
         this.jumpCounter = -22;
         this.isFalling = true;
         this.touchEnabled = false;

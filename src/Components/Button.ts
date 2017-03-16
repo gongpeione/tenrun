@@ -55,10 +55,12 @@ class Button extends Component {
             width: this.width,
             height: this.height,
             rotation: buttonStyle.rotation || 0,
+            alpha: buttonStyle.alpha || 1
         }).brush({
             width: this.width || 0,
             height: this.height || 0,
-            background: buttonStyle.background || 0x000000
+            background: buttonStyle.background || 0x000000,
+            // alpha: buttonStyle.alpha || 1
         });
 
         this.addChild(rect);

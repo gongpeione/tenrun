@@ -44,11 +44,11 @@ class View extends egret.DisplayObjectContainer {
         this.addEventListener(AlertEvent.MSG, (e: AlertEvent) => {
 
             const alert = new Button({
-                y: this.height - 200,
-                width: 400,
-                height: 80,
-                background: Const.btnColor,
-                alpha: .6,
+                y: this.height,
+                width: this.width,
+                height: 60,
+                background: 0xff000000,
+                alpha: .4,
                 text: {
                     text: e.msg,
                     style: {
@@ -59,14 +59,17 @@ class View extends egret.DisplayObjectContainer {
             })
             .center(true, false, this);
 
+            alert.alpha = 0;
+
             this.addChild(alert);
 
-            setTimeout(() => {
-                const tw = egret.Tween.get(alert);
-                tw.to({ alpha: 0 }, 1000).call(() => {
+            const tw = egret.Tween.get(alert);
+            tw.to({ y: -150, alpha: 1 }, 300, egret.Ease.backOut)
+                .wait(3000)
+                .to({ y: 150, alpha: 0 }, 300, egret.Ease.backIn)
+                .call(() => {
                     this.removeChild(alert);
                 });
-            }, 3000);
 
         }, this);
     }

@@ -19,7 +19,6 @@ var StartView = (function (_super) {
         return _this;
     }
     StartView.prototype.init = function () {
-        var _this = this;
         var bg = new egret.Bitmap();
         bg.texture = RES.getRes('start_bg');
         this.addChildAt(bg, 1);
@@ -33,23 +32,27 @@ var StartView = (function (_super) {
             this.register();
         }
         else {
-            if (!localStorage.getItem('tutorial')) {
-                this.tutorial(this.btns[0], function () {
-                    _this.tutorial(_this.btns[1], function () {
-                        _this.tutorial(_this.btns[2], function () {
-                            localStorage.setItem('tutorial', 'true');
-                            _this.btns.forEach(function (btn) {
-                                btn.enable();
-                            });
+            this.setTutorial();
+        }
+    };
+    StartView.prototype.setTutorial = function () {
+        var _this = this;
+        if (!localStorage.getItem('tutorial')) {
+            this.tutorial(this.btns[0], function () {
+                _this.tutorial(_this.btns[1], function () {
+                    _this.tutorial(_this.btns[2], function () {
+                        localStorage.setItem('tutorial', 'true');
+                        _this.btns.forEach(function (btn) {
+                            btn.enable();
                         });
                     });
                 });
-            }
-            else {
-                this.btns.forEach(function (btn) {
-                    btn.enable();
-                });
-            }
+            });
+        }
+        else {
+            this.btns.forEach(function (btn) {
+                btn.enable();
+            });
         }
     };
     StartView.prototype.addBtns = function () {
@@ -100,7 +103,7 @@ var StartView = (function (_super) {
             height: 100,
             background: Const.btnColor,
             text: {
-                text: '♫ ' + localStorage.getItem('music'),
+                text: '♫ ' + (localStorage.getItem('music') || 'ON'),
                 style: {
                     size: 30
                 }
@@ -192,12 +195,10 @@ var StartView = (function (_super) {
             }
             else {
                 localStorage.setItem('username', usernameInput.input.text);
-                _this.btns.forEach(function (btn) {
-                    btn.enable();
-                });
                 _this.removeChild(submitUsername);
                 _this.removeChild(usernameInput);
                 _this.removeChild(mask);
+                _this.setTutorial();
             }
         }, this)
             .center(true, false, this, {

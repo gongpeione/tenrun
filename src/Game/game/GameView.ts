@@ -35,6 +35,9 @@ class GameView extends View {
 
     private speed = 0;
 
+    private bg: egret.Sound;
+    private overbg: egret.Sound;
+
     constructor (context, width, height) {
         super(context);
 
@@ -102,22 +105,22 @@ class GameView extends View {
         
         let isHit = false;
 
-        const bg: egret.Sound = RES.getRes("bg");
+        this.bg = RES.getRes("bg");
         let bgPlay;
+        let overPlay;
         if (localStorage.getItem('music') === 'ON') {
-            bgPlay = bg.play(0, -1);
+            bgPlay = this.bg.play(0, -1);
             bgPlay.volume = .2;
         }
 
-        const self = this;
         function hit () {
             isHit = this.hitTest(this.figureRect, this.obstacle);
             // console.log(isHit);
             if (isHit) {
 
                 if (localStorage.getItem('music') === 'ON') {
-                    const over: egret.Sound = RES.getRes("hit");
-                    over.play(0, 1);
+                    this.overbg = RES.getRes("hit");
+                    overPlay = this.overbg.play(0, 1);
                     bgPlay && bgPlay.stop();
                 }
 
@@ -127,6 +130,12 @@ class GameView extends View {
             return false;
         }
         egret.startTick(hit, this);
+
+        this.backBtn.on(egret.TouchEvent.TOUCH_END, () => {
+            overPlay && overPlay.stop();
+            bgPlay && bgPlay.stop();
+            egret.stopTick(hit, this);
+        }, this);
 
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this, true);        
         this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this, true);
@@ -193,6 +202,19 @@ class GameView extends View {
         }
         // this.addEventListener(egret.Event.ENTER_FRAME, animate, this);
         animate();
+
+        if (!localStorage.getItem('gameTutorialed')) {
+            const gameTutorial: AlertEvent = new AlertEvent(AlertEvent.MSG, true);
+            gameTutorial.msg = '长按跳跃，跳跃高度与长按时间有关';
+            this.dispatchEvent(gameTutorial);
+
+            localStorage.setItem('gameTutorialed', 'true');
+
+            this.pause();
+            setTimeout(() => {
+                this.play()
+            }, 3000);
+        }
         
     }
 
@@ -308,7 +330,7 @@ class GameView extends View {
         
         clearInterval(this.jumpTimer);
 
-        // this.fallCounter = -this.jumpCounter;
+        this.fallCounter = -this.jumpCounter;
         this.jumpCounter = -22;
         this.isFalling = true;
 

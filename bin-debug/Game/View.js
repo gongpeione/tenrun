@@ -42,11 +42,11 @@ var View = (function (_super) {
         _this.addChildAt(bgColor, 0);
         _this.addEventListener(AlertEvent.MSG, function (e) {
             var alert = new Button({
-                y: _this.height - 200,
-                width: 400,
-                height: 80,
-                background: Const.btnColor,
-                alpha: .6,
+                y: _this.height,
+                width: _this.width,
+                height: 60,
+                background: 0xff000000,
+                alpha: .4,
                 text: {
                     text: e.msg,
                     style: {
@@ -56,13 +56,15 @@ var View = (function (_super) {
                 }
             })
                 .center(true, false, _this);
+            alert.alpha = 0;
             _this.addChild(alert);
-            setTimeout(function () {
-                var tw = egret.Tween.get(alert);
-                tw.to({ alpha: 0 }, 1000).call(function () {
-                    _this.removeChild(alert);
-                });
-            }, 3000);
+            var tw = egret.Tween.get(alert);
+            tw.to({ y: -150, alpha: 1 }, 300, egret.Ease.backOut)
+                .wait(3000)
+                .to({ y: 150, alpha: 0 }, 300, egret.Ease.backIn)
+                .call(function () {
+                _this.removeChild(alert);
+            });
         }, _this);
         return _this;
     }

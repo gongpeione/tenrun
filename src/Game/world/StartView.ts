@@ -35,25 +35,28 @@ class StartView extends View {
         if (!username) {
             this.register();
         } else {
-
-            if (!localStorage.getItem('tutorial')) {
-                this.tutorial(this.btns[0], () => {
-                    this.tutorial(this.btns[1], () => {
-                        this.tutorial(this.btns[2], () => {
-                            localStorage.setItem('tutorial', 'true');
-                            this.btns.forEach(btn => {
-                                btn.enable();
-                            });
-                        })
-                    });
-                });
-            } else {
-                this.btns.forEach(btn => {
-                    btn.enable();
-                });
-            }
+            this.setTutorial();
         }
         
+    }
+
+    setTutorial () {
+        if (!localStorage.getItem('tutorial')) {
+            this.tutorial(this.btns[0], () => {
+                this.tutorial(this.btns[1], () => {
+                    this.tutorial(this.btns[2], () => {
+                        localStorage.setItem('tutorial', 'true');
+                        this.btns.forEach(btn => {
+                            btn.enable();
+                        });
+                    })
+                });
+            });
+        } else {
+            this.btns.forEach(btn => {
+                btn.enable();
+            });
+        }
     }
 
     addBtns () {
@@ -108,7 +111,7 @@ class StartView extends View {
             height: 100,
             background: Const.btnColor,
             text: {
-                text: '♫ ' + localStorage.getItem('music'),
+                text: '♫ ' + (localStorage.getItem('music') || 'ON'),
                 style: {
                     size: 30
                 }
@@ -210,13 +213,15 @@ class StartView extends View {
             } else {
                 localStorage.setItem('username', usernameInput.input.text);
 
-                this.btns.forEach(btn => {
-                    btn.enable();
-                });
-
                 this.removeChild(submitUsername);
                 this.removeChild(usernameInput);
                 this.removeChild(mask);
+
+                this.setTutorial();
+
+                // this.btns.forEach(btn => {
+                //     btn.enable();
+                // });
             }
 
             
