@@ -1,0 +1,20 @@
+{
+	"groups": [
+		{
+			"keys": "snowflake_json,snowflake_png",
+			"name": "snow"
+		}
+	],
+	"resources": [
+		{
+			"name": "snowflake_json",
+			"type": "json",
+			"url": "assets/snowflake/snowflake.json"
+		},
+		{
+			"name": "snowflake_png",
+			"type": "image",
+			"url": "assets/snowflake/snowflake.png"
+		}
+	]
+}

@@ -1,0 +1,89 @@
+{
+	"groups": [
+		{
+			"keys": "off_png,start_btn_png,redGirlHead_png,ball_json,ball_png,texture_png,skeleton_json,texture_json,CoreElement_json,CoreElement_texture_1_json,CoreElement_texture_1_png,snowflake_json,snowflake_png",
+			"name": "GameOne"
+		},
+		{
+			"keys": "blodBarBgImage,blodBarImage",
+			"name": "bar"
+		}
+	],
+	"resources": [
+		{
+			"name":"off_png",
+		  "type":"image",
+		  "url":"assets/ToggleSwitch/off.png"
+		},
+		{
+			"name":"blodBarBgImage",
+		  "type":"image",
+		  "url":"assets/blodBarBg.png"
+		},
+		{
+			"name":"blodBarImage",
+		  "type":"image",
+		  "url":"assets/blodBar.png"
+		},
+	  {
+		  "name":"start_btn_png",
+		  "type":"image",
+		  "url":"assets/start_btn.png"
+		},
+	  {
+		  "name":"redGirlHead_png",
+		  "type":"image",
+		  "url":"assets/redGirlHead.png"
+		},
+		{
+		  "name":"ball_png",
+		  "type":"image",
+		  "url":"GameOne/ball/ball.png"
+		},
+		{
+		  "name":"ball_json",
+		  "type":"json",
+		  "url":"GameOne/ball/ball.json"
+		},
+        {
+		  "name":"texture_png",
+		  "type":"image",
+		  "url":"GameOne/armature/texture.png"
+		},
+		{
+		  "name":"skeleton_json",
+		  "type":"json",
+		  "url":"GameOne/armature/skeleton.json"
+		},
+		{
+		  "name":"texture_json",
+		  "type":"json",
+		  "url":"GameOne/armature/texture.json"
+		},
+        {
+            "name": "CoreElement_json",
+            "type": "json",
+            "url": "GameOne/CoreElement/CoreElement.json"
+        },
+        {
+            "name": "CoreElement_texture_1_json",
+            "type": "json",
+            "url": "GameOne/CoreElement/CoreElement_texture_1.json"
+        },
+        {
+            "name": "CoreElement_texture_1_png",
+            "type": "image",
+            "url": "GameOne/CoreElement/CoreElement_texture_1.png"
+        },
+		{
+			"name": "snowflake_json",
+			"type": "json",
+			"url": "assets/snowflake/snowflake.json"
+		},
+		{
+			"name": "snowflake_png",
+			"type": "image",
+			"url": "assets/snowflake/snowflake.png"
+		}
+	]
+}
