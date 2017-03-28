@@ -21,7 +21,7 @@ var game_file_list = [
 	"bin-debug/Game/AlertEvent.js",
 	"bin-debug/lib/Fetch.js",
 	"bin-debug/Game/game/GameView.js",
-	"bin-debug/Main.js",
+	"bin-debug/lib/Draw.js",
 	"bin-debug/Game/world/eui/RankList.js",
 	"bin-debug/Game/world/RankView.js",
 	"bin-debug/Game/world/StartView.js",
@@ -29,7 +29,7 @@ var game_file_list = [
 	"bin-debug/lib/p2DebugDraw.js",
 	"bin-debug/lib/Utils.js",
 	"bin-debug/Loading.js",
-	"bin-debug/lib/Draw.js",
+	"bin-debug/Main.js",
 	//----auto game_file_list end----
 ];
 

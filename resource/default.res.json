@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "btn,start_bg,Tenrun_ske_json,tenrun,tenrun_texture,sand_json,sand_png,hit,bg",
+			"keys": "btn,start_bg,Tenrun_ske_json,tenrun,tenrun_texture,sand_json,sand_png,hit,bg,TenrunB_ske_json,TenrunB_tex_json,TenrunB_tex_png",
 			"name": "preload"
 		}
 	],
@@ -51,6 +51,21 @@
 			"url": "bg.mp3",
 			"type": "sound",
 			"name": "bg"
+		},
+		{
+			"url": "TenrunB_ske.json",
+			"type": "json",
+			"name": "TenrunB_ske_json"
+		},
+		{
+			"url": "TenrunB_tex.json",
+			"type": "json",
+			"name": "TenrunB_tex_json"
+		},
+		{
+			"url": "TenrunB_tex.png",
+			"type": "image",
+			"name": "TenrunB_tex_png"
 		}
 	]
 }

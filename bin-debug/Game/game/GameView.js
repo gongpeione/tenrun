@@ -113,8 +113,8 @@ var GameView = (function (_super) {
             bgPlay && bgPlay.stop();
             egret.stopTick(hit, _this);
         }, this);
-        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this, true);
-        this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this, true);
+        // this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this, true);        
+        // this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this, true);
         this.touchEnabled = true;
         this.createObstacle();
         this.addChild(this.obstacle);
@@ -135,6 +135,7 @@ var GameView = (function (_super) {
         var boxBody = new p2.Body({ mass: 10, position: [200, 3], angle: 45 });
         boxBody.addShape(boxShape);
         world.addBody(boxBody);
+        boxBody.displays = [this.figure];
         var debugDraw = new p2DebugDraw(world);
         var sprite = new egret.Sprite();
         this.addChild(sprite);
@@ -164,6 +165,7 @@ var GameView = (function (_super) {
             startSign.x = boxBody.position[0];
             startSign.y = boxBody.position[1];
             // startSign.rotation = boxBody.angle;
+            debugDraw.drawDebug();
         }
         // this.addEventListener(egret.Event.ENTER_FRAME, animate, this);
         animate();
@@ -215,9 +217,10 @@ var GameView = (function (_super) {
         console.log(this.score);
     };
     GameView.prototype.loadFigure = function () {
-        var dragonbonesData = RES.getRes("Tenrun_ske_json");
-        var textureData = RES.getRes("tenrun");
-        var texture = RES.getRes("tenrun_texture");
+        var _this = this;
+        var dragonbonesData = RES.getRes("TenrunB_ske_json");
+        var textureData = RES.getRes("TenrunB_tex_json");
+        var texture = RES.getRes("TenrunB_tex_png");
         var dragonbonesFactory = new dragonBones.EgretFactory();
         dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(dragonbonesData));
         dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
@@ -225,10 +228,29 @@ var GameView = (function (_super) {
         this.figure = dragonbonesFactory.buildArmatureDisplay("Tenrun");
         this.figure.x = this.figurePoint.x;
         this.figure.y = this.figurePoint.y;
-        this.figure.scaleX = -0.3;
-        this.figure.scaleY = 0.3;
-        this.figure.animation.timeScale = 2;
+        // this.figure.scaleX = -0.3;
+        // this.figure.scaleY = 0.3;
+        // this.figure.animation.timeScale = 2;
         this.figure.animation.play('run', 0);
+        var ar = this.figure._armature;
+        // ar.getSlot('head_boundingBox').boundingBoxData.x = this.figure.x - this.figure.width / 2;
+        // ar.getSlot('head_boundingBox').boundingBoxData.y = this.figure.y - this.figure.height / 2;
+        // console.log(ar.getSlot('rightLeg_boundingBox'));
+        this.addEventListener(egret.TouchEvent.TOUCH_END, function (e) {
+            console.log(
+            // ar.display,
+            // e.stageX - this.figure.x, 
+            // e.stageY - this.figure.y, 
+            // ar.getSlot('head_boundingBox').boundingBoxData, 
+            ar.getSlot('head_boundingBox').containsPoint(e.stageX - _this.figure.x, e.stageY - _this.figure.y));
+        }, this);
+        // const world = new p2.World();
+        // world.sleepMode = p2.World.BODY_SLEEPING;
+        // world.gravity = [ 0, 100 ];
+        // const debugDraw = new p2DebugDraw(world);
+        // var sprite: egret.Sprite = new egret.Sprite();
+        // this.addChild(sprite);
+        // debugDraw.setSprite(sprite);
         // Create a rect fit figure that use to hitTest
         this.figureRect = Draw.rect(null, {
             x: this.figureRectPoint.x,
@@ -298,7 +320,6 @@ var GameView = (function (_super) {
         return 0.5 * (Math.pow(x, 2)) + 150;
     };
     GameView.prototype.createObstacle = function () {
-        var _this = this;
         // const maxHeight = 180;
         var randomHeight = this.randomHeight(100, 195);
         this.obstacle = Draw.rect(this.obstacle ? this.obstacle : null, {
@@ -310,13 +331,13 @@ var GameView = (function (_super) {
             background: Const.mainColor,
         });
         // this.addChild(world);
-        this.tw = egret.Tween.get(this.obstacle);
-        this.tw.to({ x: -100 }, 2000 - this.speed).call(function () {
-            _this.score += 100;
-            _this.scoreText.text = _this.score + '';
-            _this.createObstacle();
-        });
-        this.speed <= 1000 && (this.speed += 10);
+        // this.tw = egret.Tween.get(this.obstacle);
+        // this.tw.to({ x: -100 }, 2000 - this.speed).call(() => {
+        //     this.score += 100;
+        //     this.scoreText.text = this.score + '';
+        //     this.createObstacle();
+        // });
+        // this.speed <= 1000 && (this.speed += 10);
     };
     GameView.prototype.randomHeight = function (min, max) {
         return Math.random() * (max - min) + min;

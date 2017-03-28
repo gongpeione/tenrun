@@ -137,8 +137,8 @@ class GameView extends View {
             egret.stopTick(hit, this);
         }, this);
 
-        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this, true);        
-        this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this, true);
+        // this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.jump, this, true);        
+        // this.addEventListener(egret.TouchEvent.TOUCH_END, this.falling, this, true);
 
         this.touchEnabled = true;
 
@@ -164,6 +164,8 @@ class GameView extends View {
         const boxBody = new p2.Body({ mass: 10, position:[200, 3], angle: 45 });
         boxBody.addShape(boxShape);
         world.addBody(boxBody);
+
+        boxBody.displays = [this.figure];
 
         const debugDraw = new p2DebugDraw(world);
  
@@ -199,6 +201,8 @@ class GameView extends View {
             startSign.x = boxBody.position[0];
             startSign.y = boxBody.position[1];
             // startSign.rotation = boxBody.angle;
+
+            debugDraw.drawDebug();
         }
         // this.addEventListener(egret.Event.ENTER_FRAME, animate, this);
         animate();
@@ -260,9 +264,9 @@ class GameView extends View {
     }
 
     loadFigure () {
-        const dragonbonesData = RES.getRes( "Tenrun_ske_json" );  
-        const textureData = RES.getRes( "tenrun" );  
-        const texture = RES.getRes( "tenrun_texture" );
+        const dragonbonesData = RES.getRes( "TenrunB_ske_json" );  
+        const textureData = RES.getRes( "TenrunB_tex_json" );  
+        const texture = RES.getRes( "TenrunB_tex_png" );
 
         const dragonbonesFactory:dragonBones.EgretFactory = new dragonBones.EgretFactory();  
         dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(dragonbonesData));  
@@ -273,11 +277,41 @@ class GameView extends View {
 
         this.figure.x = this.figurePoint.x;
         this.figure.y = this.figurePoint.y;
-        this.figure.scaleX = -0.3;
-        this.figure.scaleY = 0.3;
-        this.figure.animation.timeScale = 2;
+        // this.figure.scaleX = -0.3;
+        // this.figure.scaleY = 0.3;
+        // this.figure.animation.timeScale = 2;
 
         this.figure.animation.play('run', 0);
+
+        const ar = this.figure._armature;
+        // ar.getSlot('head_boundingBox').boundingBoxData.x = this.figure.x - this.figure.width / 2;
+        // ar.getSlot('head_boundingBox').boundingBoxData.y = this.figure.y - this.figure.height / 2;
+
+        // console.log(ar.getSlot('rightLeg_boundingBox'));
+
+        this.addEventListener(egret.TouchEvent.TOUCH_END, (e: egret.TouchEvent) => {
+            console.log(
+                // ar.display,
+                // e.stageX - this.figure.x, 
+                // e.stageY - this.figure.y, 
+                // ar.getSlot('head_boundingBox').boundingBoxData, 
+                ar.getSlot('head_boundingBox').containsPoint(
+                    e.stageX - this.figure.x, 
+                    e.stageY - this.figure.y
+                )
+            );
+        }, this);
+
+        // const world = new p2.World();
+        // world.sleepMode = p2.World.BODY_SLEEPING;
+        // world.gravity = [ 0, 100 ];
+
+        // const debugDraw = new p2DebugDraw(world);
+        // var sprite: egret.Sprite = new egret.Sprite();
+        // this.addChild(sprite);
+        // debugDraw.setSprite(sprite);
+
+
 
         // Create a rect fit figure that use to hitTest
         this.figureRect = Draw.rect(null, {
@@ -387,14 +421,14 @@ class GameView extends View {
 
         // this.addChild(world);
         
-        this.tw = egret.Tween.get(this.obstacle);
-        this.tw.to({ x: -100 }, 2000 - this.speed).call(() => {
-            this.score += 100;
-            this.scoreText.text = this.score + '';
-            this.createObstacle();
-        });
+        // this.tw = egret.Tween.get(this.obstacle);
+        // this.tw.to({ x: -100 }, 2000 - this.speed).call(() => {
+        //     this.score += 100;
+        //     this.scoreText.text = this.score + '';
+        //     this.createObstacle();
+        // });
 
-        this.speed <= 1000 && (this.speed += 10);
+        // this.speed <= 1000 && (this.speed += 10);
     }
 
     randomHeight(min, max) {
